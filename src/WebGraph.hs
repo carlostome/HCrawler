@@ -15,18 +15,14 @@ module WebGraph
 
 -------------------------------------------------------------------------------
 
-import Test.QuickCheck
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified Data.List as L
-
-import Network.URI
-
 import Data.Maybe
-
+import Network.URI
 import Data.DeriveTH
 import Data.Derive.Arbitrary
-
+import Test.QuickCheck
 -------------------------------------------------------------------------------
 
 $(derive makeArbitrary ''URIAuth)
@@ -105,14 +101,3 @@ exists uri = M.member uri . webG
 unions :: [WebG] -> WebG
 unions = WebG . M.unions . map webG
 
-
--- Tests
-prop_insert_exists uri kw lnks webg =  uri `exists` insert uri kw lnks webg
-
-prop_insert_uris uri kw links webg = uri `elem` getURIs (insert uri kw links webg)
-
-prop_insert_links uri kw lnks webg = lnks == fromJust (links uri (insert uri kw lnks webg))
-
-prop_insert_kws uri kw lnks webg = kw == fromJust (keywords uri (insert uri kw lnks webg))
-
-prop_unions g1 g2 = null $ getURIs (unions [g1,g2]) L.\\ (getURIs g1 ++ getURIs g2)

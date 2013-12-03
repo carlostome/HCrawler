@@ -45,7 +45,6 @@ build-type:          Simple
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:       >=1.10
 
-
 executable HCrawler
   -- .hs or .lhs file containing the Main module.
   main-is: Main.hs             
@@ -55,16 +54,60 @@ executable HCrawler
           HTTPClient
           HTMLScrapper
           WebGraph
-          Lorem
           UI.Server
-
-  -- Other library packages from which modules are imported.
-  build-depends:       base >=4.6 && <4.7, regex-posix >=0.95 && <0.96, containers >=0.5 && <0.6, tagsoup >=0.13 && <0.14, http-conduit >=1.9, bytestring, derive, HTTP, network, hxt, HandsomeSoup, QuickCheck, deepseq, scotty, text
+          Analyzer
   
   -- Directories containing source files.
   hs-source-dirs: src
-            
+  
+  build-depends:
+         base >=4.6 && <4.7,
+         regex-posix >=0.95 && <0.96,
+         containers >=0.5 && <0.6,
+         tagsoup >=0.13 && <0.14,
+         http-conduit >=1.9,
+         bytestring, 
+         derive, 
+         HTTP, 
+         network, 
+         hxt, 
+         HandsomeSoup,
+         deepseq, 
+         scotty, 
+         text,
+         QuickCheck
   
   -- Base language which the package is written in.
   default-language:    Haskell2010
   
+test-suite Tests
+  hs-source-dirs: test src
+
+  main-is: Main.hs
+
+  Type: exitcode-stdio-1.0
+
+  build-depends: 
+         base >=4.6 && <4.7,
+         regex-posix >=0.95 && <0.96,
+         containers >=0.5 && <0.6,
+         tagsoup >=0.13 && <0.14,
+         http-conduit >=1.9,
+         bytestring, 
+         derive, 
+         HTTP, 
+         network, 
+         hxt, 
+         HandsomeSoup,
+         deepseq, 
+         scotty, 
+         text,
+         QuickCheck,
+         test-framework,
+         test-framework-quickcheck2
+
+  other-modules:
+          Util.Lorem
+          Util.HTMLMock
+          
+  default-language:    Haskell2010          

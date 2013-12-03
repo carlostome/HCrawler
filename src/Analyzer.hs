@@ -1,4 +1,5 @@
 module Analyzer (
+  buildWebGraph,
   makeQueryTable,
   queryTable,
   ResultTable
@@ -6,7 +7,6 @@ module Analyzer (
 
 -------------------------------------------------------------------------------
 
-import HTMLMock
 import Data.Maybe (isNothing, fromJust, catMaybes, maybeToList, isJust)
 import qualified Data.List as L ((\\), sortBy)
 import  Data.Char (toLower)
@@ -64,22 +64,3 @@ makeQueryTable pagePool = makeTable  webGraph pagesRank
     webGraph  = buildWebGraph pagePool
     pagesRank = rankPages webGraph
 
--- TEST
-
-prop_buildGraph_allPagesIn htmldomain = all (`WG.exists` graph) allURL
-  where
-    graph = buildWebGraph (htmlDomToPool htmldomain) 
-    allURL = getAllURLs htmldomain
-    
-prop_searchTable :: String -> ResultTable -> Bool
-prop_searchTable word table = 
-  case result of
-      Nothing -> null resultSearch
-      Just list -> length list == length resultSearch && null (list L.\\ resultSearch) && (L.sortBy (\(_,v1) (_,v2) -> compare v2 v1) list == resultSearch)
-    where
-      result = M.lookup word table
-      resultSearch = queryTable word table
-
-
-prop_rankPages :: WG.WebG -> Bool
-prop_rankPages graph = M.foldl (+) 0 (rankPages graph) == fromIntegral (length $ concat $ catMaybes $ map (`WG.links` graph) $ WG.getURIs graph)

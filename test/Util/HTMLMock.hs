@@ -1,4 +1,4 @@
-module HTMLMock (
+module Util.HTMLMock (
   HTMLDomain,
   getAllURLs,
   htmlDomToPool
@@ -11,7 +11,7 @@ import Data.List (nub)
 import HTMLScrapper (parsePage, HTMLDoc)
 import Network.URI
 import Test.QuickCheck
-import qualified Lorem 
+import qualified Util.Lorem as Lorem
 
 import qualified Data.Map as M
 import Control.Monad (sequence)

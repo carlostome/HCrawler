@@ -1,4 +1,6 @@
-module Lorem(generate) where
+module Util.Lorem(
+  generate
+  ) where
 
 generate :: [String]
 generate = words raw
