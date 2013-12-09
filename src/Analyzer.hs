@@ -2,6 +2,7 @@ module Analyzer (
   buildWebGraph,
   makeQueryTable,
   queryTable,
+  fetchKeywords,
   ResultTable
   ) where
 
@@ -9,7 +10,7 @@ module Analyzer (
 
 import Data.Maybe (isNothing, fromJust, catMaybes, maybeToList, isJust)
 import qualified Data.List as L ((\\), sortBy)
-import  Data.Char (toLower)
+import Data.Char (toLower)
 import qualified Data.Map as M
 import qualified Data.Set as S
 import qualified WebGraph as WG

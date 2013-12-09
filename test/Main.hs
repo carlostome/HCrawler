@@ -15,6 +15,7 @@ tests =
   [
     testGroup "Analyzer"
     [
-      testProperty "All pages generated" prop_buildGraph_allPagesIn
+      testProperty "All pages generated" prop_buildGraph_allPagesIn,
+      testProperty "Keywords" prop_keywords
     ]
   ]
