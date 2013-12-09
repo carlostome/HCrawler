@@ -1,8 +1,4 @@
-module Util.HTMLMock (
-  HTMLDomain,
-  getAllURLs,
-  htmlDomToPool
-  ) where
+module Util.HTMLMock where
 
 -------------------------------------------------------------------------------
 
@@ -43,12 +39,13 @@ instance Arbitrary HTMLDomain where
     randomPages <- sequence $ map (randomPage urls) urls
     return $ HTMLDomain $ (principal urls) : randomPages
     where
-      principal urls = HTMLPage (HTMLURI "http://www.testing.com/") ("<html><body>" ++ makeLinks urls ++ "</body></html>")
+      principal urls = HTMLPage (HTMLURI "http://www.testing.com/") ("<html><head><title></title></head><body>" ++ makeLinks urls ++ "</body></html>")
                        M.empty urls
       arbitraryWords n = fmap unwords $ vectorOf n $ elements $ Lorem.generate
       makeLinks = concatMap ((\l -> "<a href=\"" ++ l ++ "\"</a>") . _uri)
       randomPage domainUris url = do
-        title <- sized arbitraryWords
+        n <- arbitrary
+        title <- arbitraryWords $ abs n + 1
         h1 <- sized arbitraryWords
         h2 <- sized arbitraryWords 
         p1 <- sized arbitraryWords
@@ -70,12 +67,4 @@ htmlDomToPool dom = zip3 uris pages links
 
 getAllURLs :: HTMLDomain -> [URI]
 getAllURLs = map (fromJust . parseURI . _uri . _uriP) . _domain
-
--- Properties
-
--- All links from pages is a subset of all the urls
-prop_links_domain dom = all (`elem` listFromURIs) listFromLinks
-  where
-    listFromURIs =  map _uriP (_domain dom)
-    listFromLinks = concatMap _links $ _domain dom
 
