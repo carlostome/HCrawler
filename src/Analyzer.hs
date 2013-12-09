@@ -49,15 +49,21 @@ rankPages  = foldl (\m u -> M.insertWith (+) u 1 m) M.empty . allLinks
 
 -- | Makes a search table which maps Words to web pages
 makeTable :: WG.WebG -> PageRank -> ResultTable
--- todo calculate value
-makeTable webGraph pageRank = M.unionsWith (++) $ map (\uri -> M.fromList $  map (\(w,val) -> (w,[(uri,val)])) $ M.toList $ fromJust $ WG.keywords uri webGraph) $ WG.getURIs webGraph
+makeTable webGraph pageRank = M.unionsWith (++) $ map processURI  graphURIs
   where
-    
+    getRank uri = fromJust $ M.lookup uri pageRank
+    calculateRank valWord uri = getRank uri + valWord
+    graphURIs = WG.getURIs webGraph
+    processURI uri = M.fromList $  map (\(w,val) -> (w,[(uri,calculateRank val uri)])) $ M.toList $ fromJust $ WG.keywords uri webGraph
+
+
 -- | Search for a word in the ResultTable and return the list of pages
 -- | ordered by rank
 queryTable :: String -> ResultTable -> [(URI,Integer)]
 queryTable s  = L.sortBy (\(_,v1) (_,v2) -> compare v2 v1) . concat . maybeToList . M.lookup s
 
+
+-- | makeQueryTable gets a pool of htmlpages and return the table with ranks
 makeQueryTable :: [(URI,HTMLDoc,[URI])] -> ResultTable
 makeQueryTable pagePool = makeTable  webGraph pagesRank
   where
