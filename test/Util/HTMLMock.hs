@@ -13,6 +13,9 @@ import qualified Data.Map as M
 import Control.Monad (sequence)
 
 -------------------------------------------------------------------------------
+
+prefix = "http://www.testing.com/"
+
 boundMax = 3367900313
 
 newtype HTMLURI = HTMLURI { _uri :: String } deriving (Show, Eq)
@@ -20,7 +23,7 @@ newtype HTMLURI = HTMLURI { _uri :: String } deriving (Show, Eq)
 instance Arbitrary HTMLURI where
   arbitrary = fmap f (arbitrary :: Gen Integer)
     where
-      f = HTMLURI . ("http://www.testing.com/"++) . (++".html") . show . (`mod` boundMax) . abs
+      f = HTMLURI . (prefix++) . (++".html") . show . (`mod` boundMax) . abs
 
 data HTMLPage = HTMLPage {
   _uriP :: HTMLURI,
@@ -36,16 +39,15 @@ newtype HTMLDomain = HTMLDomain {
 instance Arbitrary HTMLDomain where
   arbitrary = do
     urls <- fmap nub $ listOf arbitrary
-    randomPages <- sequence $ map (randomPage urls) urls
-    return $ HTMLDomain $ (principal urls) : randomPages
+    randomPages <- mapM (randomPage urls) urls
+    return $ HTMLDomain $ principal urls : randomPages
     where
-      principal urls = HTMLPage (HTMLURI "http://www.testing.com/") ("<html><head><title></title></head><body>" ++ makeLinks urls ++ "</body></html>")
+      principal urls = HTMLPage (HTMLURI prefix) ("<html><head><title></title></head><body>" ++ makeLinks urls ++ "</body></html>")
                        M.empty urls
-      arbitraryWords n = fmap unwords $ vectorOf n $ elements $ Lorem.generate
+      arbitraryWords n = fmap unwords $ vectorOf n $ elements Lorem.generate
       makeLinks = concatMap ((\l -> "<a href=\"" ++ l ++ "\"</a>") . _uri)
       randomPage domainUris url = do
-        n <- arbitrary
-        title <- arbitraryWords $ abs n + 1
+        title <- sized arbitraryWords
         h1 <- sized arbitraryWords
         h2 <- sized arbitraryWords 
         p1 <- sized arbitraryWords
@@ -67,4 +69,19 @@ htmlDomToPool dom = zip3 uris pages links
 
 getAllURLs :: HTMLDomain -> [URI]
 getAllURLs = map (fromJust . parseURI . _uri . _uriP) . _domain
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

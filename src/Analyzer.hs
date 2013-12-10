@@ -8,7 +8,7 @@ module Analyzer (
 
 -------------------------------------------------------------------------------
 
-import Data.Maybe (isNothing, fromJust, catMaybes, maybeToList, isJust)
+import Data.Maybe (isNothing, fromJust, mapMaybe, maybeToList, isJust)
 import qualified Data.List as L ((\\), sortBy)
 import Data.Char (toLower)
 import qualified Data.Map as M
@@ -45,7 +45,7 @@ fetchKeywords doc = foldl (\m (tag, val) -> foldl (\mp (word, points) -> M.inser
 rankPages :: WG.WebG -> PageRank
 rankPages  = foldl (\m u -> M.insertWith (+) u 1 m) M.empty . allLinks
   where
-    allLinks webg = concat $ catMaybes $ map (`WG.links` webg) $ WG.getURIs webg
+    allLinks webg = concat $ mapMaybe (`WG.links` webg) (WG.getURIs webg)
 
 
 -- | Makes a search table which maps Words to web pages

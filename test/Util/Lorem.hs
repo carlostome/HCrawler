@@ -2,8 +2,10 @@ module Util.Lorem(
   generate
   ) where
 
+import Data.Char
+
 generate :: [String]
-generate = words raw
+generate =  words $ map toLower raw 
   where
     raw = "Lorem ipsum dolor sit amet consectetur adipiscing elit Etiam tempor volutpat enim nec sagittis" ++
           " Nunc suscipit quam mi in posuere ipsum rhoncus a Praesent non lorem libero Etiam ultricies felis" ++

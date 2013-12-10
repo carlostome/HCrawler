@@ -1,6 +1,10 @@
-module WebGrapTest where
+module WebGraphTest where
 
 import Test.QuickCheck
+import WebGraph
+import qualified Data.List as L
+import Data.Maybe
+
 
 -- Tests
 prop_insert_exists uri kw lnks webg =  uri `exists` insert uri kw lnks webg
