@@ -6,9 +6,6 @@ module Main where
 import System.IO
 import System.Environment
 import Control.DeepSeq (deepseq, NFData, rnf)
-import Data.Maybe (isNothing, fromJust, catMaybes, maybeToList)
-import Data.List (sortBy, isSuffixOf)
-import Data.Char (toLower)
 import Control.Monad
 import Control.Exception
 import qualified Data.Set as S
@@ -55,6 +52,7 @@ main = do
     Just u -> do
       putStrLn "\nBuilding the WebGraph. This will take a while.\n"
       pages <- crawlPages (read n) u
+      putStrLn "\nBuilding the query table\n"
       let resultTable = makeQueryTable pages
       resultTable `deepseq` putStrLn "\nTable evaluated\n"
       Server.start resultTable queryTable

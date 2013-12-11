@@ -52,10 +52,13 @@ rankPages  = foldl (\m u -> M.insertWith (+) u 1 m) M.empty . allLinks
 makeTable :: WG.WebG -> PageRank -> ResultTable
 makeTable webGraph pageRank = M.unionsWith (++) $ map processURI  graphURIs
   where
-    getRank uri = fromJust $ M.lookup uri pageRank
     calculateRank valWord uri = getRank uri + valWord
     graphURIs = WG.getURIs webGraph
-    processURI uri = M.fromList $  map (\(w,val) -> (w,[(uri,calculateRank val uri)])) $ M.toList $ fromJust $ WG.keywords uri webGraph
+    processURI uri = M.fromList $  map (\(w,val) -> (w,[(uri,calculateRank val uri)]))
+                     $ M.toList $ fromJust $ WG.keywords uri webGraph
+    getRank uri = case M.lookup uri pageRank of
+      Nothing -> 0
+      Just r  -> r
 
 
 -- | Search for a word in the ResultTable and return the list of pages
