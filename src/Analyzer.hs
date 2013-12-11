@@ -8,11 +8,10 @@ module Analyzer (
 
 -------------------------------------------------------------------------------
 
-import Data.Maybe (isNothing, fromJust, mapMaybe, maybeToList, isJust)
-import qualified Data.List as L ((\\), sortBy)
+import Data.Maybe 
 import Data.Char (toLower)
+import qualified Data.List as L
 import qualified Data.Map as M
-import qualified Data.Set as S
 import qualified WebGraph as WG
 import HTMLScrapper
 import Network.URI (URI)
@@ -22,6 +21,7 @@ import Network.URI (URI)
 type ResultTable = M.Map String [(URI,Integer)]
 type PageRank = M.Map URI Integer
 
+ranks :: [(String, Integer)]
 ranks =  [("title",10) ,("h1", 8), ("h2", 6), ("p",4), ("a", 3), ("div", 4)]
 
 -- | Builds the webGraph of a given pool of pages

@@ -10,10 +10,6 @@ module HTMLScrapper(
 
 import Text.HandsomeSoup
 import Text.XML.HXT.Core
-import Data.Tree.NTree.TypeDefs
-import Control.Arrow
-import Control.Arrow.ListArrow
-
 import Network.URI
 import Data.Maybe (mapMaybe)
 import Data.List (isSuffixOf, nub)

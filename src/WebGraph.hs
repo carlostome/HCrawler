@@ -16,12 +16,8 @@ module WebGraph
 -------------------------------------------------------------------------------
 
 import qualified Data.Map as M
-import qualified Data.Set as S
-import qualified Data.List as L
-import Data.Maybe
 import Network.URI
 import Data.DeriveTH
-import Data.Derive.Arbitrary
 import Test.QuickCheck
 -------------------------------------------------------------------------------
 
@@ -59,8 +55,8 @@ instance Arbitrary WebG where
                 headKw <- arbitrary
                 uris <- vectorOf (n-1) arbitrary
                 kw <- vectorOf (n-1) arbitrary
-                links <- vectorOf (n-1) (subListOf uris)
-                let g = (headNode,headKw,uris) : zip3 uris kw links
+                lnks <- vectorOf (n-1) (subListOf uris)
+                let g = (headNode,headKw,uris) : zip3 uris kw lnks
                 return $ WebG $ foldl (\m (u,k,l) -> M.insert u (k,filter (/=u) l) m) M.empty g
 
 
@@ -71,7 +67,7 @@ empty = WebG M.empty
 
 -- | Insert a Node into WebG
 insert :: URI -> Keywords -> [URI] -> WebG -> WebG
-insert uri kw links = WebG . M.insert uri (kw,filter (/= uri) links) . webG
+insert uri kw lnks = WebG . M.insert uri (kw,filter (/= uri) lnks) . webG
 
 -- | Get all links of a given URI
 links :: URI -> WebG -> Maybe [URI]
@@ -91,7 +87,7 @@ isLeaf uri webg =
     let l = links uri webg 
     in case l of 
         Nothing -> False
-        Just links -> null links                
+        Just results -> null results                
 
 -- | Checks if a URI exists in the graph
 exists :: URI -> WebG -> Bool

@@ -8,7 +8,6 @@ module HTTPClient (
 
 import Network.HTTP
 import Network.URI
-import Network.HTTP.Headers
 import Control.Exception
 import Data.Typeable
 import Data.Maybe (fromJust)
@@ -33,7 +32,7 @@ downloadURL url
                (3,_,_) -> -- A HTTP redirect
                  case findHeader HdrLocation r of
                    Nothing -> return (show r)
-                   Just url -> downloadURL url
+                   Just u -> downloadURL u
                _ -> return (show r)
     | otherwise = throwIO HttpException
         where 

@@ -9,7 +9,6 @@ import Control.DeepSeq (deepseq, NFData, rnf)
 import Control.Monad
 import Control.Exception
 import qualified Data.Set as S
-import Network.HTTP.Conduit
 import Network.URI
 import HTMLScrapper
 import qualified HTTPClient as H
@@ -17,7 +16,6 @@ import qualified UI.Server as Server
 import Analyzer
 
 import Data.DeriveTH
-import Data.Derive.NFData
 
 -------------------------------------------------------------------------------
 
